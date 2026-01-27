@@ -21,14 +21,6 @@ PATH_EYETRACKER = Path("Z:/yueying/psychedeLights_YueyingDong/data/pdRaw_tracker
 PATH_PSYCHOPY = Path("Z:/yueying/psychedeLights_YueyingDong/data/pdRaw_psychopy/")
 
 
-# Experiment timing (ms)
-EVENT_DURATIONS = {
-    'fixation': 500,
-    'stim': 3000,
-    'precueRest': 500,
-    'retrocue': 500,
-    'delay': 3000
-}
 
 # Column definitions
 RELEVANT_COLUMNS = [
@@ -78,7 +70,7 @@ def load_eyetracker_file(filepath, relevant_cols):
     
     # Clean trial IDs
     df['TRIALID'] = df['TRIALID'].replace('UNDEFINED', np.nan)
-    df = df[df['TRIALID'].notna()].copy()
+    df = df[~df['TRIALID'].isnull()]
     
     # Forward fill sample messages
     df['SAMPLE_MESSAGE'] = df['SAMPLE_MESSAGE'].replace('.', np.nan).ffill()
@@ -105,7 +97,9 @@ def prepare_trial_data(df, eye_column, max_samples):
         Dictionary with keys: 'pupil', 'gaze_x', 'gaze_y', 'events'
         Each value is a DataFrame with trials as rows, timestamps as columns
     """
-    # Rename and convert columns
+    # Rename and convert columns; I had this naming convention
+    # because in the past I had been dealing with pupil lab data, which had
+    # this convention
     df = df.rename(columns={
         eye_column: 'diameter_3d',
         'TIMESTAMP': 'pupil_timestamp'

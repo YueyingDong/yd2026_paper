@@ -42,7 +42,28 @@ def _ensure_numeric_array(data):
         return data.values
     except AttributeError:
         return data
+    
 
+def cohenD(group1, group2):
+    """Calculate Cohen's d effect size for two groups.
+    
+    Parameters
+    ----------
+    group1, group2 : array-like
+        Sample data for each group
+        
+    Returns
+    -------
+    float
+        Cohen's d effect size
+    """
+    mean1, mean2 = np.mean(group1), np.mean(group2)
+    std1, std2 = np.std(group1, ddof=1), np.std(group2, ddof=1)
+    n1, n2 = len(group1), len(group2)
+    
+    pooled_std = np.sqrt(((n1 - 1) * std1**2 + (n2 - 1) * std2**2) / (n1 + n2 - 2))
+    
+    return (mean1 - mean2) / pooled_std
 
 def calculate_speed_unsmoothed(timepoint, pupil_size):
     """

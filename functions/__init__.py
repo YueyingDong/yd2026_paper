@@ -45,4 +45,5 @@ __all__ = [
 
     # Statistical functions
     'calculate_median_variance',
+    'cohenD'
 ]
