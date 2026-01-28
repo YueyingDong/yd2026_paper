@@ -5,9 +5,11 @@ Eye tracking data processing utilities.
 
 Contains functions for:
 - Blink detection and removal
+- Gaze processing and saccade identification
 - Speed/velocity calculations  
 - Signal smoothing and filtering
 - Trial quality assessment
+- IPA (index of pupillary activity) calculation
 """
 
 __version__ = "0.1.0"
@@ -27,6 +29,9 @@ from .permutationFunc import *
 
 # Import utilities
 from .helperFunc import *
+
+# Import IPA
+from .ipa import *
 
 
 # Define what's available with "from functions import *"
