@@ -307,6 +307,7 @@ def smooth_signal(signal, window_len=11, window='hanning'):
     # Remove padding to match original signal length
     half_window = int(window_len / 2)
     return smoothed[half_window:-half_window]
+
 def is_strictly_increasing(array):
     """
     Check if array values are strictly increasing.
@@ -349,6 +350,30 @@ def fs(width, height):
     """
     plt.rcParams['figure.figsize'] = (width, height)
 
+
+
+def linear_interpolate(x, y, method='nearest'):
+    """
+    methods needs to be one of the scipy.interpolate.interp1d methods
+    https://docs.scipy.org/doc/scipy/reference/generated/scipy.interpolate.interp1d.html
+    """
+    #if the entire trial is nan, return nan
+    if np.isnan(np.array(y)).sum() == len(y):
+        interp = np.empty(len(y))
+        interp[:] = np.nan
+        return interp
+    #else,interpolate
+    try:
+        li = interp1d(x[~y.isnull()],
+                        y[~y.isnull()],
+                        fill_value="extrapolate",kind = method)
+        interp = li(x)
+    except AttributeError: #handling np.array and pandas df conversion
+        li = interp1d(x[~np.isnan(y)],
+                        y[~np.isnan(y)],fill_value="extrapolate",kind = method)
+        
+    interp = li(x)
+    return interp
 
 """
 Outlier detection and rejection utilities for pupil data.

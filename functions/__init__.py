@@ -14,6 +14,7 @@ __version__ = "0.1.0"
 
 # Import main pipeline function
 from .processPup import *
+from .processGaze import *
 
 # Import cleaning function
 from .deBlink import *
@@ -33,11 +34,15 @@ __all__ = [
 
     #process
     'process_pupil_data_pipeline',
+    'process_gaze_data_pipeline',
+    'detect_and_remove_blinks',
+    'calculate_gaze_shifts',
 
     # Commonly used utilities
     'find_consecutive_groups',
     'smooth_signal',
     'fs', # Set figure size
+    'linear_interpolate',
 
     # Permutation
     'cluster_permutation_test',

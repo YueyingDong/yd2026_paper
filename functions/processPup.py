@@ -214,9 +214,6 @@ def apply_participant_level_filtering(
         upper_bound = median + sd_threshold * variance
         lower_bound = median - sd_threshold * variance
         
-        print(f"  Participant {participant}: "
-              f"bounds = [{lower_bound:.0f}, {upper_bound:.0f}]")
-        
         # Create outlier mask for this participant
         outlier_mask = (pupil_values > upper_bound) | (pupil_values < lower_bound)
         outlier_mask.insert(0, 'TRIALID', participant_data['TRIALID'].values)
@@ -230,7 +227,7 @@ def apply_participant_level_filtering(
     result = pupil_df.copy()
     result.iloc[:, 1:] = result.iloc[:, 1:].mask(combined_mask.iloc[:, 1:], np.nan)
     
-    return result
+    return result, combined_mask
 
 
 def filter_trials_by_data_quality(
@@ -428,7 +425,7 @@ def process_pupil_data_pipeline(
     )
     
     # Stage 2: Participant-level filtering
-    participant_filtered = apply_participant_level_filtering(
+    participant_filtered, combined_participant_mask = apply_participant_level_filtering(
         cleaned_pupil,
         behavioral_df,
         sd_threshold=sd_threshold,
@@ -452,4 +449,4 @@ def process_pupil_data_pipeline(
     print("\nTrials per participant:")
     print(get_trial_counts_by_participant(final_clean))
     
-    return final_clean
+    return final_clean, combined_participant_mask
